@@ -22,7 +22,7 @@ export default function Cart({ cartItems, onDelete, onUpdateQuantity, AddressDat
 
   return (
     <div className="container my-4">
-      <Link to="/products" className="btn btn-outline-primary mb-3">←Ak Back To Products</Link>
+      <Link to="/products" className="btn btn-outline-primary mb-3">←Back To Products</Link>
       <h2 className="cart-heading mb-4">Shopping Cart</h2>
 
       {cartItems.length === 0 ? (
