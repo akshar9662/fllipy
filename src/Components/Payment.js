@@ -27,7 +27,7 @@ export default function Payment({ AddressData, cartItems, addToOrders, DeleteAll
 
   return (
     <div className="container py-4">
-      <Link to="/cart" className="btn back-button mb-3">← Back To Cart</Link>
+      <Link to="/cart" className="btn btn-outline-primary mb-3">← Back To Cart</Link>
       <h2 className="mb-4">Payment Page</h2>
 
       <div className="row">
