@@ -243,3 +243,11 @@ margin-top: 10px;
 .card-title {
   font-weight: 600;
 }
+@media (max-width: 768px) {
+  .card-body {
+    text-align: center;
+  }
+  .order-address{
+    text-align: center;
+  }
+}
