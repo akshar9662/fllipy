@@ -205,6 +205,9 @@ margin-top: 10px;
   .cart-product-name{
     text-align: center;
   }
+   .old-price {
+  margin-left: 10px;
+}
   .cart-total-remove {
     text-align: center;
     margin-top: 10px;
