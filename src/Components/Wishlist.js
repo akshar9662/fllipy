@@ -10,7 +10,7 @@ export default function Products({ wishlistItems, onDelete }) {
       <h2 className="wishlist-heading">Your Wishlist</h2>
 
       {wishlistItems.length === 0 ? (
-        <p className="text-center">No Products Yet. 😓</p>
+        <p className="text-muted">No Products Yet. 😓</p>
       ) : (
         <div className="row">
           {wishlistItems.map((item, index) => (
