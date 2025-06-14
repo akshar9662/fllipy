@@ -32,7 +32,7 @@ export default function Orders({ orderItems }) {
                     <p className="card-text fw-semibold">Total: ₹{item.price * item.quantity}</p>
                   </div>
                 </div>
-                <div className="col-md-3 small p-3">
+                <div className="order-address col-md-3 small p-3">
                   <p className="mb-1">📍 {order.shippingAddress.address},</p>
                   <p className="mb-1">
                     {order.shippingAddress.city}, {order.shippingAddress.state} -{' '}
