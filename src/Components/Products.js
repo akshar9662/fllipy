@@ -76,6 +76,7 @@ export default function Products({ addToCart, addToWishlist, searchQuery }) {
           </div>
         </div>
       </div>
+                </div>
     ))}
   </div>
 </div>
