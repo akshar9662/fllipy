@@ -35,22 +35,22 @@ export default function Cart({ cartItems, onDelete, onUpdateQuantity, AddressDat
                 <div className="card-body d-flex flex-column flex-md-row align-items-center">
                   <img src={item.image} alt={item.name} className="img-fluid cart-product-image" style={{ width: '120px', height: 'auto' }} />
 
-                  <div className="ms-md-4 mt-3 mt-md-0 flex-grow-1">
-                    <h5 className="mb-1">{item.name}</h5>
-                    <div>
+                  <div className="ms-md-4 mt-3 mt-md-0 flex-grow-1 w-100">
+                    <h5 className="cart-product-name">{item.name}</h5>
+                    <div className="d-flex flex-column flex-sm-row justify-content-center justify-content-md-start align-items-center gap-2">
 <span className="old-price">₹{item.oldPrice}</span>
 
   <span className="fw-bold text-success">₹{item.price}</span>
 </div>
 
-                    <div className="mt-2 d-flex align-items-center gap-2">
+                    <div className="mt-2 d-flex align-items-center justify-content-center justify-content-md-start gap-2">
                       <button className="btn btn-outline-primary btn-sm" onClick={() => onUpdateQuantity(index, -1)} disabled={item.quantity <= 1}>−</button>
                       <span className="mx-2">{item.quantity}</span>
                       <button className="btn btn-outline-primary btn-sm" onClick={() => onUpdateQuantity(index, 1)}>+</button>
                     </div>
                   </div>
                   <div className="cart-total-remove">
-  <p className="mb-2 fw-medium">Total: ₹{item.price * item.quantity}</p>
+  <p className="cart-total">Total: ₹{item.price * item.quantity}</p>
   <button className="btn btn-danger btn-sm" onClick={() => onDelete(index)}>Remove</button>
 </div>
 
