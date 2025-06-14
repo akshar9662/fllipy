@@ -15,7 +15,7 @@ export default function Products({ wishlistItems, onDelete }) {
         <div className="row">
           {wishlistItems.map((item, index) => (
             <div key={index} className="col-12 col-sm-6 col-md-4 col-lg-3 mb-4">
-              <div className="card h-100 position-relative shadow-sm">
+              <div className="card h-100 position-relative shadow-sm" style={{ borderRadius: '6px' }}>
                 <div className="badge discount-badge position-absolute top-0 start-0 m-2">
                   {((item.price * 100) / item.oldPrice).toFixed(0)}% OFF
                 </div>
