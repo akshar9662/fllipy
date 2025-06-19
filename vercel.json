@@ -1,5 +1,5 @@
 {
-  "rewrites": [
-    { "source": "/ads.txt", "destination": "/ads.txt" }
+  "routes": [
+    { "src": "/ads.txt", "dest": "/ads.txt", "headers": { "cache-control": "public, max-age=600" } }
   ]
 }
