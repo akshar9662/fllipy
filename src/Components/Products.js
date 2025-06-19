@@ -4,7 +4,7 @@ import tv from "./images/tv.jpg";
 import laptop from "./images/laptop.jpg";
 import fridge from "./images/fridge.jpeg";
 import washingmachine from "./images/washing machine.jpg";
-import AdComponent from './components/AdComponent';
+import AdComponent from './AdComponent';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 
