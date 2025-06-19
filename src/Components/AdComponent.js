@@ -1,4 +1,4 @@
-// src/components/AdComponent.js
+
 import { useEffect } from 'react';
 
 const AdComponent = ({ slot }) => {
