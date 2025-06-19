@@ -1,5 +1,0 @@
-{
-  "routes": [
-    { "src": "/ads.txt", "dest": "/ads.txt", "headers": { "cache-control": "public, max-age=600" } }
-  ]
-}
