@@ -22,7 +22,7 @@ import Footer from "./Components/Footer";
 import AboutUs from "./Components/AboutUs";
 import ContactUs from "./Components/ContactUs";
 import Faqs from "./Components/FAQs";
-import Terms from "./Components/Terms&Conditions";
+import Terms from "./Components/Terms";
 import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
 
