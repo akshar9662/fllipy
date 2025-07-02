@@ -4,7 +4,6 @@ import tv from "./images/tv.jpg";
 import laptop from "./images/laptop.jpg";
 import fridge from "./images/fridge.jpeg";
 import washingmachine from "./images/washing machine.jpg";
-import AdComponent from './AdComponent';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 
@@ -40,7 +39,6 @@ export default function Products({ addToCart, addToWishlist, searchQuery }) {
   return (
 
 <div className="container best-selling-wrapper pb-4">
-<AdComponent slot="1812068633" />
 
   <h2 className="best-selling-title">Best Selling Products</h2>
   <div className="row">
