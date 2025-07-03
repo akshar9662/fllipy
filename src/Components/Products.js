@@ -1,30 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import tv from "./images/tv.jpg";
-import laptop from "./images/laptop.jpg";
-import fridge from "./images/fridge.jpeg";
-import washingmachine from "./images/washing machine.jpg";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 
-const products = [
-  { name: "TV", image: tv, oldPrice: 25000, price: 23000, rating: 5 },
-  { name: "Laptop", image: laptop, oldPrice: 45000, price: 40000, rating: 4.5 },
-  { name: "Fridge", image: fridge, oldPrice: 15000, price: 12500, rating: 4 },
-  { name: "Washing Machine", image: washingmachine, oldPrice: 20000, price: 15000, rating: 4.2 },
-];
-
-export default function Products({ addToCart, addToWishlist, searchQuery }) {
-  const [filteredProducts, setFilteredProducts] = useState(products);
+export default function Products({ addToCart, addToWishlist, searchQuery,Product }) {
+  const [filteredProducts, setFilteredProducts] = useState(Product);
   const navigate = useNavigate();
 
   useEffect(() => {
     const query = String(searchQuery || '').toLowerCase();
     setFilteredProducts(
-      query === '' ? products :
-      products.filter(item => item.name.toLowerCase().includes(query))
+      query === '' ? Product :
+      Product.filter(item => item.name.toLowerCase().includes(query))
     );
-  }, [searchQuery]);
+  }, [searchQuery,Product]);
 
   const handleAddToCart = (product) => {
     addToCart(product);

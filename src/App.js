@@ -131,7 +131,7 @@ useEffect(() => {
   useEffect(() => {
     const fetchAddress = async () => {
       try {
-        const response = await axios.get("/api/address");
+        const response = await axios.get("http://localhost:5000/api/address");
         const dbAddress = response.data;
         const allAddresses = dbAddress.flatMap((doc) => doc.addresses);
         setAddressData(allAddresses);

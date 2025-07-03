@@ -107,7 +107,7 @@ export default function Payment({ AddressData, cartItems, addToOrders, DeleteAll
       width: '60px',
       height: '60px',
       objectFit: 'cover',
-      marginRight: '15px' // ✅ Ensures space to the right of image
+      marginRight: '15px' 
     }}
   />
   <div className="flex-grow-1">
@@ -142,7 +142,6 @@ export default function Payment({ AddressData, cartItems, addToOrders, DeleteAll
         )}
       </div>
 
-      {/* Confirm Modal */}
       {showConfirm && (
         <div className="modal d-block text-center" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
           <div className="modal-dialog modal-dialog-centered">
@@ -160,8 +159,6 @@ export default function Payment({ AddressData, cartItems, addToOrders, DeleteAll
           </div>
         </div>
       )}
-
-      {/* Order Placed Modal */}
       {showConfirm1 && (
         <div className="modal d-block text-center" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
           <div className="modal-dialog modal-dialog-centered">
