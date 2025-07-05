@@ -10,6 +10,7 @@ export default function AddressForm({
   onDelete,
   onSaveAddress,
 }) {
+  const loginId = CheckLogin;
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
@@ -43,8 +44,11 @@ export default function AddressForm({
       alert("Name should only contain alphabetical characters.");
       return;
     }
-    onAddress({ name, phone, address, city, state, pincode, addressType });
+    onAddress({loginId, name, phone, address, city, state, pincode, addressType });
     clearForm();
+    setTimeout(() => {
+    window.location.reload();
+  }, 300);
   };
 
   const SaveAddress = () => {
@@ -56,8 +60,9 @@ export default function AddressForm({
       return;
     }
 
-    const newAddress = {
-      _id: AddressData[editIndex]._id,
+    const updatedAddress = {
+      _id: editIndex,
+      loginId:CheckLogin,
       name,
       phone,
       address,
@@ -66,10 +71,6 @@ export default function AddressForm({
       pincode,
       addressType,
     };
-
-    if (editIndex != null) {
-      const updatedAddress = [...AddressData];
-      updatedAddress[editIndex] = newAddress;
       onSaveAddress(updatedAddress, editIndex);
       clearForm();
 
@@ -79,11 +80,13 @@ export default function AddressForm({
       if (location.state?.from === "profile") {
         navigate("/payment", { replace: true });
       }
-    }
+      setTimeout(() => {
+    window.location.reload();
+  }, 300);
   };
 
-  const onEdit = (index) => {
-    const SelectedIndex = AddressData[index];
+  const onEdit = (_id) => {
+    const SelectedIndex = AddressData.find((addr) => addr._id === _id);
     setName(SelectedIndex.name);
     setPhone(SelectedIndex.phone);
     setAddress(SelectedIndex.address);
@@ -91,7 +94,7 @@ export default function AddressForm({
     setState(SelectedIndex.state);
     setPincode(SelectedIndex.pincode);
     setAddressType(SelectedIndex.addressType);
-    setEditIndex(index);
+    setEditIndex(_id);
   };
 
   const clearForm = () => {
@@ -106,9 +109,8 @@ export default function AddressForm({
   };
 
   useEffect(() => {
-    if (location.state && location.state.editIndex != null) {
-      const index = location.state.editIndex;
-      const SelectedIndex = AddressData[index];
+      if (location.state?.editIndex) {
+    const SelectedIndex = AddressData.find(addr => addr._id === location.state.editIndex);
       if (SelectedIndex) {
         setName(SelectedIndex.name);
         setPhone(SelectedIndex.phone);
@@ -117,13 +119,19 @@ export default function AddressForm({
         setState(SelectedIndex.state);
         setPincode(SelectedIndex.pincode);
         setAddressType(SelectedIndex.addressType);
-        setEditIndex(index);
+        setEditIndex(SelectedIndex._id);
       }
     }
   }, [AddressData, location.state]);
  const user = SignupData.find((u) => String(u._id) === String(CheckLogin));
   
-  
+  if (!SignupData || SignupData.length === 0) {
+  return (
+    <div className="d-flex justify-content-center align-items-center vh-100">
+      <div className="text-muted">⏳ Loading Your Addresses...</div>
+    </div>
+  );
+}
     const handleLogin = () => {
       navigate("/login");
     };
@@ -143,13 +151,7 @@ export default function AddressForm({
       </div>
       );
     }
- if (!SignupData || SignupData.length === 0) {
-  return (
-    <div className="d-flex justify-content-center align-items-center vh-100">
-      <div className="text-muted">⏳ Loading Your Addresses...</div>
-    </div>
-  );
-}
+ 
   return (
     <div className="container my-4">
       <Link to="/products" className="btn btn-outline-primary mb-3">
@@ -268,7 +270,7 @@ export default function AddressForm({
         )}
       </form>
 
-      {AddressData.length > 0 && (
+      {AddressData.filter(addr => addr.loginId === CheckLogin).length > 0 && (
         <div className="table-responsive mt-4">
           <table className="table table-bordered text-center">
             <thead className="table-light">
@@ -285,8 +287,8 @@ export default function AddressForm({
               </tr>
             </thead>
             <tbody>
-              {AddressData.map((data, index) => (
-                <tr key={index}>
+               {AddressData.filter(addr => addr.loginId === CheckLogin).map((data,index) => (
+                <tr key={data._id || index}>
                   <td>{data.name}</td>
                   <td>{data.phone}</td>
                   <td>{data.address}</td>
@@ -297,7 +299,7 @@ export default function AddressForm({
                   <td>
                     <button
                       className="btn btn-warning btn-sm"
-                      onClick={() => onEdit(index)}
+                      onClick={() => onEdit(data._id)}
                     >
                       ✏️
                     </button>
@@ -305,7 +307,7 @@ export default function AddressForm({
                   <td>
                     <button
                       className="btn btn-danger btn-sm"
-                      onClick={() => onDelete(index)}
+                      onClick={() => onDelete(data._id)}
                     >
                       🗑️
                     </button>
