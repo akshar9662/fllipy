@@ -73,7 +73,7 @@ useEffect(() => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/api/login");
+        const response = await axios.get(`${process.env.REACT_APP_API}/api/login`);
         const usersdata= response.data;
         const data = usersdata.flatMap((doc) => doc.users);
         setSignupData(data);
@@ -88,7 +88,7 @@ useEffect(() => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/api/products");
+        const response = await axios.get(`${process.env.REACT_APP_API}/api/products`);
         setProducts(response.data);
       } catch (err) {
         console.error("Error fetching products:", err);
@@ -101,7 +101,7 @@ useEffect(() => {
   useEffect(() => {
     const fetchWishlist = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/api/wishlist");
+        const response = await axios.get(`${process.env.REACT_APP_API}/api/wishlist`);
         const dbwishlist = response.data;
         const allwishlist = dbwishlist.flatMap((doc) => doc.items);
         setWishlistItems(allwishlist);
@@ -116,7 +116,7 @@ useEffect(() => {
   useEffect(() => {
     const fetchCart = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/api/cart");
+        const response = await axios.get(``${process.env.REACT_APP_API}/api/cart`);
         const dbCart = response.data;
         const allCart = dbCart.flatMap((doc) => doc.items);
         setCartItems(allCart);
@@ -131,7 +131,7 @@ useEffect(() => {
   useEffect(() => {
     const fetchAddress = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/api/address");
+        const response = await axios.get(``${process.env.REACT_APP_API}/api/address`);
         const dbAddress = response.data;
         const allAddresses = dbAddress.flatMap((doc) => doc.addresses);
         setAddressData(allAddresses);
@@ -146,7 +146,7 @@ useEffect(() => {
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/api/order");
+        const response = await axios.get(`${process.env.REACT_APP_API}/api/order`);
         const dbOrders = response.data || [];
         setOrderItems(dbOrders);
       } catch (err) {
@@ -165,7 +165,7 @@ useEffect(() => {
       alert("User Already Added.😓");
     } else {
       setSignupData([...SignupData, NewSignup]);
-      await axios.post("http://localhost:5000/api/login", {
+      await axios.post(`${process.env.REACT_APP_API}/api/login`, {
         users: NewSignup,
       });
       alert("Account Sign Up Successfully!🎉");
@@ -205,7 +205,7 @@ useEffect(() => {
         updatedCart = [...cartItems, { ...product, quantity: 1 }];
       }
       setCartItems(updatedCart);
-      await axios.post("http://localhost:5000/api/cart", {
+      await axios.post(`${process.env.REACT_APP_API}/api/cart`, {
         items: product,
       });
       setMessage("Product Added To Cart! 🎉");
@@ -223,7 +223,7 @@ useEffect(() => {
         updated[index].quantity = 1;
       }
       setCartItems(updated);
-      await axios.patch("http://localhost:5000/api/cart/update", {
+      await axios.patch(`${process.env.REACT_APP_API}/api/cart/update`, {
         name: updated[index].pname,
         quantity: updated[index].quantity,
       });
@@ -237,7 +237,7 @@ useEffect(() => {
       const itemToDelete = cartItems[indexToDelete];
       const newCart = cartItems.filter((_, index) => index !== indexToDelete);
       setCartItems(newCart);
-      await axios.patch("http://localhost:5000/api/cart/delete", {
+      await axios.patch(`${process.env.REACT_APP_API}/api/cart/delete`, {
         productId: itemToDelete._id,
       });
       setMessage("Product Deleted To Cart! 🎉");
@@ -248,7 +248,7 @@ useEffect(() => {
   };
   const deleteAllItems = async () => {
     try {
-      await axios.delete("http://localhost:5000/api/cart/clear");
+      await axios.delete(`${process.env.REACT_APP_API}/api/cart/clear`);
       setCartItems([]);
     } catch (err) {
       console.log("Error Clear Cart:", err);
@@ -264,7 +264,7 @@ useEffect(() => {
       } else {
         setWishlistItems([...wishlistItems, product]);
         setMessage("Product Added To Wishlist!🎉");
-        await axios.post("http://localhost:5000/api/wishlist", {
+        await axios.post(`${process.env.REACT_APP_API}/api/wishlist`, {
           addToWishlist: product,
         });
       }
@@ -281,7 +281,7 @@ useEffect(() => {
         (_, index) => index !== indexDelete
       );
       setWishlistItems(newWishlist);
-      await axios.patch("http://localhost:5000/api/wishlist/delete", {
+      await axios.patch(`${process.env.REACT_APP_API}/api/wishlist/delete`, {
         wishlistId: itemToDelete._id,
       });
       setMessage("Product Deleted To Wishlist🎉");
@@ -301,7 +301,7 @@ useEffect(() => {
       } else {
         setAddressData([...AddressData, NewAddress]);
         setMessage("Address Addeded Successfully!🎉");
-        await axios.post("http://localhost:5000/api/address", {
+        await axios.post(`${process.env.REACT_APP_API}/api/address`, {
           newAddress: NewAddress,
         });
       }
@@ -317,7 +317,7 @@ useEffect(() => {
       setMessage("Address Edited Successfully!🎉");
       setShowMessageBox(true);
       const EditAddress = updatedAddress[index];
-      await axios.patch("http://localhost:5000/api/address/update", {
+      await axios.patch(`${process.env.REACT_APP_API}/api/address/update`, {
         EditAddress: EditAddress,
       });
     } catch (err) {
@@ -337,7 +337,7 @@ useEffect(() => {
       );
       setAddressData(newAddress);
       setMessage("Address Deleted Successfully!🎉");
-      await axios.patch("http://localhost:5000/api/address/delete", {
+      await axios.patch(`${process.env.REACT_APP_API}/api/address/delete`, {
         AddressId: itemToDelete._id,
       });
       setShowMessageBox(true);
@@ -360,7 +360,7 @@ useEffect(() => {
         shippingAddress: { ...orderaddress },
       };
       setOrderItems([...OrderItems, order]);
-      await axios.post("http://localhost:5000/api/order", { addOrders: order });
+      await axios.post(`${process.env.REACT_APP_API}/api/order`, { addOrders: order });
     } catch (err) {
       console.log("Error Adding Orders:", err);
     }
