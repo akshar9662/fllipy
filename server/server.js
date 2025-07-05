@@ -12,6 +12,47 @@ mongoose
   .then(() => console.log("✅ Connected to MongoDB Atlas"))
   .catch((err) => console.error("❌ MongoDB connection failed:", err));
 
+
+const AdminLoginSchema = new mongoose.Schema({
+ users: [
+    {
+      email: String,
+      password: String,
+    },
+  ],
+});
+const AdminLogin = mongoose.model("AdminLogin", AdminLoginSchema);
+// ✅ Get all users
+app.get("/api/adminlogin", async (req, res) => {
+  try {
+    const Users = await AdminLogin.find();
+    res.json(Users);
+  } catch (error) {
+    res.status(500).json({ message: "Failed to fetch users", error });
+  }
+});
+// POST: Login
+app.post("/api/adminlogin", async (req, res) => {
+  try {
+    const User = req.body.users;
+    let existingUser = await AdminLogin.findOne();
+    if (!existingUser) {
+      const newUsers = new AdminLogin({ users: User });
+      await newUsers.save();
+      return res
+        .status(201)
+        .json({ message: "New User Registered", adminlogin: newUsers });
+    } 
+    existingUser.users.push(User);
+    await existingUser.save();
+    res.status(200).json({ message: "New User Registered", adminlogin: existingUser });
+  } catch (error) {
+    console.error("❌ Error Login:", error);
+    res.status(500).json({ message: "Failed to save/update Users", error });
+  }
+});
+
+
 const LoginSchema = new mongoose.Schema({
  users: [
     {
@@ -60,49 +101,6 @@ const productSchema = new mongoose.Schema({
   quantity: { type: Number, min: 1 },
 });
 const Product = mongoose.model("Product", productSchema);
-
-app.post("/api/products/seed", async (req, res) => {
-  try {
-    await Product.deleteMany({});
-    await Product.insertMany([
-      {
-        pname: "TV",
-        image: "http://localhost:3000/images/tv.jpg",
-        oldPrice: 25000,
-        price: 23000,
-        rating: 5,
-        quantity: 1,
-      },
-      {
-        pname: "Laptop",
-        image: "http://localhost:3000/images/laptop.jpg",
-        oldPrice: 45000,
-        price: 40000,
-        rating: 4.5,
-        quantity: 1,
-      },
-      {
-        pname: "Fridge",
-        image: "http://localhost:3000/images/fridge.jpeg",
-        oldPrice: 15000,
-        price: 12500,
-        rating: 4,
-        quantity: 1,
-      },
-      {
-        pname: "Washing Machine",
-        image: "http://localhost:3000/images/washing machine.jpg",
-        oldPrice: 20000,
-        price: 15000,
-        rating: 4.2,
-        quantity: 1,
-      },
-    ]);
-    res.status(201).json({ message: "Database seeded successfully" });
-  } catch (err) {
-    res.status(500).json({ message: "Error seeding products", err });
-  }
-});
 // ✅ Get all products
 app.get("/api/products", async (req, res) => {
   try {
@@ -112,9 +110,73 @@ app.get("/api/products", async (req, res) => {
     res.status(500).json({ message: "Error fetching products", error });
   }
 });
+app.get("/api/products/:id", async (req, res) => {
+  try {
+    const product = await Product.findById(req.params.id);
+    if (!product) return res.status(404).json({ message: "Product not found" });
+    res.json(product);
+  } catch (error) {
+    res.status(500).json({ error: "Server Error" });
+  }
+});
+const multer = require("multer");
+const path = require("path");
+app.use("/images", express.static(path.join(__dirname, "../public/images")));const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "../public/images");
+  },
+  filename: function (req, file, cb) {
+    cb(null, file.originalname); 
+  },
+});
+const upload = multer({ storage });
+
+app.post("/api/upload", upload.single("image"), (req, res) => {
+  if (!req.file) return res.status(400).send("No file uploaded.");
+  res.json({ path: `/images/${req.file.originalname}` });
+});
+app.post("/api/products", async (req, res) => {
+  try {
+    const newProduct = new Product(req.body);
+    const savedProduct = await newProduct.save();
+    res.status(201).json(savedProduct);
+  } catch (error) {
+    console.error("Error saving product:", error);
+    res.status(500).json({ error: "Server Error" });
+  }
+});
+app.put("/api/products/:id", async (req, res) => {
+  try {
+    const updatedProduct = await Product.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      { new: true }
+    );
+    if (!updatedProduct) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+    res.json(updatedProduct);
+  } catch (error) {
+    console.error("Error updating product:", error);
+    res.status(500).json({ error: "Server Error" });
+  }
+});
+app.delete("/api/products/:id", async (req, res) => {
+  try {
+    const deleted = await Product.findByIdAndDelete(req.params.id);
+    if (!deleted) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+    res.json({ message: "Product deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting product:", error);
+    res.status(500).json({ error: "Server Error" });
+  }
+});
+
 
 const cartItemSchema = new mongoose.Schema({
-  productId: mongoose.Schema.Types.ObjectId,
+  loginId: String,
   pname: String,
   image: String,
   oldPrice: Number,
@@ -138,17 +200,16 @@ app.get("/api/cart", async (req, res) => {
 // POST: Add A New Item
 app.post("/api/cart", async (req, res) => {
   try {
-    const newItems = req.body.items;
-    let existingCart = await Cart.findOne();
+    const newItems = req.body.items; 
+    const loginId = newItems.loginId;
+    let existingCart = await Cart.findOne({"items.loginId": loginId });
     if (!existingCart) {
-      const newCart = new Cart({ items: newItems });
+      const newCart = new Cart({ items: [newItems] });
       await newCart.save();
-      return res
-        .status(201)
-        .json({ message: "New cart created", cart: newCart });
+      return res.status(201).json({ message: "New cart created", cart: newCart });
     }
     const index = existingCart.items.findIndex(
-      (item) => item.pname === newItems.pname
+      (item) => item.pname === newItems.pname && item.loginId === loginId
     );
     if (index !== -1) {
       existingCart.items[index].quantity += 1;
@@ -158,41 +219,44 @@ app.post("/api/cart", async (req, res) => {
     await existingCart.save();
     res.status(200).json({ message: "Cart updated", cart: existingCart });
   } catch (error) {
-    console.error("❌ Error updating cart:", error);
     res.status(500).json({ message: "Failed to save/update cart", error });
   }
 });
+
 // PATCH: Update Quantity Of A Specific Item
 app.patch("/api/cart/update", async (req, res) => {
-  const { name, quantity } = req.body;
+  const { productId, quantity,loginId } = req.body;
   try {
-    const cart = await Cart.findOne();
-    if (!cart) return res.status(404).json({ message: "Cart not found" });
-    const item = cart.items.find((item) => item.pname === name);
-    if (!item)
+    const cart = await Cart.findOne({"items.loginId":loginId});
+    if (!cart) 
+    return res.status(404).json({ message: "Item not found in cart" });
+    const item = cart.items.find(
+      (item) => item._id.toString() === productId.toString()
+    );
+    if (!item) {
       return res.status(404).json({ message: "Item not found in cart" });
-    item.quantity = quantity;
+    }
+    item.quantity = quantity < 1 ? 1 : quantity;
     await cart.save();
     res.json({ message: "Quantity updated", cart });
   } catch (err) {
-    console.error("Error updating quantity:", err);
     res.status(500).json({ message: "Server error", err });
   }
 });
 // PATCH: Delete Cart Specific Item
 app.patch("/api/cart/delete", async (req, res) => {
   try {
-    const { productId } = req.body;
-    const cart = await Cart.findOne();
+    const { productId,loginId } = req.body;
+    const cart = await Cart.findOne({"items.loginId": loginId });
     if (!cart) {
       return res.status(404).json({ message: "Cart not found" });
     }
-    cart.items = cart.items.filter((item) => item._id.toString() !== productId);
+      cart.items = cart.items.filter(
+      (item) => item._id.toString() !== productId
+    );
     if (cart.items.length === 0) {
-      await Cart.deleteOne({ _id: cart._id });
-      return res
-        .status(200)
-        .json({ message: "Cart deleted because it's empty" });
+    await Cart.deleteOne({ _id: cart._id });
+    return res.status(200).json({ message: "cart item deleted" });
     }
     await cart.save();
     res.status(200).json({ message: "Item removed from cart", cart });
@@ -201,9 +265,11 @@ app.patch("/api/cart/delete", async (req, res) => {
     res.status(500).json({ message: "Server error while deleting cart item" });
   }
 });
+
 app.delete("/api/cart/clear", async (req, res) => {
   try {
-    const cart = await Cart.findOne();
+    const {loginId} = req.body;
+    const cart = await Cart.findOne({"items.loginId": loginId });
     if (!cart) {
       return res.status(404).json({ message: "Cart not found" });
     }
@@ -221,6 +287,7 @@ app.delete("/api/cart/clear", async (req, res) => {
 const AddressSchema = new mongoose.Schema({
   addresses: [
     {
+      loginId: String,
       name: String,
       phone: Number,
       address: String,
@@ -248,9 +315,10 @@ app.get("/api/address", async (req, res) => {
 app.post("/api/address", async (req, res) => {
   try {
     const newAddress = req.body.newAddress;
-    let existing = await Address.findOne();
+    const loginId = newAddress.loginId;
+    let existing = await Address.findOne({"addresses.loginId": loginId });
     if (!existing) {
-      const saveAddress = new Address({ addresses: newAddress });
+      const saveAddress = new Address({ addresses: [newAddress] });
       await saveAddress.save();
       return res
         .status(201)
@@ -267,8 +335,8 @@ app.post("/api/address", async (req, res) => {
 // PATCH: Update Specific Address
 app.patch("/api/address/update", async (req, res) => {
   try {
-    const EditAddress = req.body.EditAddress;
-    let existing = await Address.findOne();
+    const {EditAddress,loginId} = req.body;
+    let existing = await Address.findOne({"addresses.loginId": loginId });
     if (!existing) {
       return res.status(404).json({ message: "No address found" });
     }
@@ -291,23 +359,21 @@ app.patch("/api/address/update", async (req, res) => {
 // PATCH: Delete Specific Address
 app.patch("/api/address/delete", async (req, res) => {
   try {
-    const { AddressId } = req.body;
-    const address = await Address.findOne();
+    const { AddressId,loginId } = req.body;
+    const address = await Address.findOne({"addresses.loginId":loginId});
     if (!address) {
       return res
         .status(404)
         .json({ message: `Address with id '${AddressId}' not found` });
     }
-    address.addresses = address.addresses.filter(
+     address.addresses = address.addresses.filter(
       (item) => item._id.toString() !== AddressId
     );
     if (address.addresses.length === 0) {
       await Address.deleteOne({ _id: address._id });
-      return res
-        .status(200)
-        .json({ message: "Address deleted because it's empty" });
+      return res.status(200).json({ message: "Address deleted (empty document)" });
     }
-    await address.save();
+     await address.save();
     res.status(200).json({ message: `Address removed`, address: address });
   } catch (error) {
     console.error("Error deleting Address:", error);
@@ -315,6 +381,8 @@ app.patch("/api/address/delete", async (req, res) => {
   }
 });
 
+    
+  
 const orderproductSchema = new mongoose.Schema({
   pname: String,
   image: String,
@@ -336,6 +404,7 @@ const shippingSchema = new mongoose.Schema({
 });
 
 const orderSchema = new mongoose.Schema({
+  loginId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
   product: [orderproductSchema],
   shippingAddress: shippingSchema,
   createdAt: { type: Date, default: Date.now },
@@ -355,8 +424,9 @@ app.get("/api/order", async (req, res) => {
 });
 app.post("/api/order", async (req, res) => {
   try {
-    const { product, shippingAddress } = req.body.addOrders;
+    const {loginId, product, shippingAddress } = req.body.addOrders;
     const newOrder = new Order({
+      loginId,
       product,
       shippingAddress,
     });
@@ -371,9 +441,10 @@ app.post("/api/order", async (req, res) => {
 });
 
 const wishlistItemSchema = new mongoose.Schema({
-  productId: mongoose.Schema.Types.ObjectId,
+  loginId: String,
   pname: String,
   image: String,
+  rating: String,
   oldPrice: Number,
   price: Number,
 });
@@ -398,9 +469,10 @@ app.get("/api/wishlist", async (req, res) => {
 app.post("/api/wishlist", async (req, res) => {
   try {
     const newItems = req.body.addToWishlist;
-    let existingWishlist = await Wishlist.findOne();
+    const loginId = newItems.loginId;
+    let existingWishlist = await Wishlist.findOne({"items.loginId":loginId});
     if (!existingWishlist) {
-      const newWishlist = new Wishlist({ items: newItems });
+      const newWishlist = new Wishlist({ items: [newItems] });
       await newWishlist.save();
       return res
         .status(201)
@@ -419,8 +491,8 @@ app.post("/api/wishlist", async (req, res) => {
 // PATCH: Delete wishlist Specific Item
 app.patch("/api/wishlist/delete", async (req, res) => {
   try {
-    const { wishlistId } = req.body;
-    const wishlist = await Wishlist.findOne();
+    const { wishlistId,loginId } = req.body;
+    const wishlist = await Wishlist.findOne({"items.loginId": loginId });
     if (!wishlist) {
       return res.status(404).json({ message: "wishlist not found" });
     }
@@ -440,6 +512,38 @@ app.patch("/api/wishlist/delete", async (req, res) => {
     res
       .status(500)
       .json({ message: "Server error while deleting wishlist item" });
+  }
+});
+
+const contactSchema = new mongoose.Schema({
+  name: String,
+  email: String,
+  message: String,
+});
+
+const Contact = mongoose.model("Contact", contactSchema);
+
+// 📥 POST: Add a new contact message
+app.post("/api/contactus", async (req, res) => {
+  try {
+    const { name, email, message } = req.body;
+    const newContact = new Contact({ name, email, message });
+    await newContact.save();
+    res.status(201).json({ message: "Message sent successfully", newContact });
+  } catch (error) {
+    console.error("❌ Error submitting contact form:", error);
+    res.status(500).json({ message: "Failed to save contact", error });
+  }
+});
+
+// 📤 GET: Fetch all contact messages
+app.get("/api/contactus", async (req, res) => {
+  try {
+    const contacts = await Contact.find();
+    res.json(contacts);
+  } catch (error) {
+    console.error("❌ Error fetching contact messages:", error);
+    res.status(500).json({ message: "Failed to fetch contact messages", error });
   }
 });
 
