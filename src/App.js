@@ -116,7 +116,7 @@ useEffect(() => {
   useEffect(() => {
     const fetchCart = async () => {
       try {
-        const response = await axios.get(``${process.env.REACT_APP_API}/api/cart`);
+        const response = await axios.get(`${process.env.REACT_APP_API}/api/cart`);
         const dbCart = response.data;
         const allCart = dbCart.flatMap((doc) => doc.items);
         setCartItems(allCart);
@@ -131,7 +131,7 @@ useEffect(() => {
   useEffect(() => {
     const fetchAddress = async () => {
       try {
-        const response = await axios.get(``${process.env.REACT_APP_API}/api/address`);
+        const response = await axios.get(`${process.env.REACT_APP_API}/api/address`);
         const dbAddress = response.data;
         const allAddresses = dbAddress.flatMap((doc) => doc.addresses);
         setAddressData(allAddresses);
