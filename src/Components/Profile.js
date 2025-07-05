@@ -46,28 +46,40 @@ if (!SignupData || SignupData.length === 0) {
 
               <h4 className="text-center mb-4">👤 User Profile</h4>
 
-              {AddressData.length === 0 ? (
-                <p className="text-center text-muted">No address found.</p>
-              ) : (
-                AddressData.map((addr, index) => (
-                  <div
-                    key={index}
-                    className="text-start mb-3 p-3 border rounded bg-light"
-                  >
-                    <p className="mb-1"><strong>👤 Name:</strong> {addr.name}</p>
-                    <p className="mb-1"><strong>📧 Email:</strong> {user.email}</p>
-                    <p className="mb-1"><strong>📱 Phone:</strong> {addr.phone}</p>
-                    <p className="mb-0">
-                      <strong>
-                        {addr.addressType === "Home" && "🏠 Address:"}
-                        {addr.addressType === "Work" && "🏢 Address:"}
-                        {addr.addressType === "Other" && "📍 Address:"}
-                      </strong>{" "}
-                      {addr.address}
-                    </p>
-                  </div>
-                ))
-              )}
+             {AddressData.filter(addr => addr.loginId === CheckLogin).length === 0 ? (
+              <div
+      className="text-center text-start mb-3 p-3 border rounded bg-light"
+    ><p className="mb-1"><strong>📧 Email:</strong> {user.email}</p>
+  <p className="text-center text-muted">No address found.</p>
+  <Link to="/Address">
+  <button
+            type="button"
+            className="btn btn-primary"
+          >
+            ➕ Add Address
+          </button></Link>
+  </div> 
+) : (
+  AddressData.filter(addr => addr.loginId === CheckLogin).map((addr, index) => (
+    <div
+      key={index}
+      className="text-start mb-3 p-3 border rounded bg-light"
+    >
+      <p className="mb-1"><strong>👤 Name:</strong> {addr.name}</p>
+      <p className="mb-1"><strong>📧 Email:</strong> {user.email}</p>
+      <p className="mb-1"><strong>📱 Phone:</strong> {addr.phone}</p>
+      <p className="mb-0">
+        <strong>
+          {addr.addressType === "Home" && "🏠 Address:"}
+          {addr.addressType === "Work" && "🏢 Address:"}
+          {addr.addressType === "Other" && "📍 Address:"}
+        </strong>{" "}
+        {addr.address}
+      </p>
+    </div>
+  ))
+)}
+
             </div>
           </div>
         </div>
