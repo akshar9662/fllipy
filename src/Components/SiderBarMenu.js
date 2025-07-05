@@ -24,7 +24,6 @@ export default function SideBarMenu() {
   return (
     <div className="container-fluid px-2">
       <div className="row">
-        {/* Sidebar for medium and up - vertical */}
         <div className="col-md-3 d-none d-md-block">
           <div className="list-group">
             {categories.map((item, index) => (
@@ -40,7 +39,6 @@ export default function SideBarMenu() {
           </div>
         </div>
 
-        {/* Horizontal list for small devices */}
         <div className="col-12 d-md-none mb-3">
           <div className="d-flex flex-wrap justify-content-start gap-3">
             {categories.map((item, index) => (
