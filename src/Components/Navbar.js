@@ -15,14 +15,14 @@ const navLinks = [
   { label: 'ORDERS', path: '/orders' },
   { label: 'CART', path: '/cart' },
   { label: 'WISHLIST', path: '/wishlist' },
-  { label: 'LOGOUT', path: '/logout' },
 ];
 
 export default function Navbar({ search }) {
   const [name, setName] = useState('');
 
   const onSearch = () => {
-    if (search) search(name);
+    if (search) 
+      search(name);
   };
 
   return (
