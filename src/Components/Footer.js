@@ -6,7 +6,6 @@ const Footer = () => {
     <footer className="bg-dark text-light pt-5 pb-3 mt-5 w-100">
       <div className="container-fluid px-5">
         <div className="row text-center text-md-start">
-          {/* Column 1 */}
           <div className="col-md-3 mb-4">
             <h5 className="fw-bold mb-3">🛍️ Fllipy</h5>
             <p>
@@ -14,7 +13,6 @@ const Footer = () => {
             </p>
           </div>
 
-          {/* Column 2 */}
           <div className="col-md-3 mb-4">
             <h6 className="fw-bold mb-3">Quick Links</h6>
             <ul className="list-unstyled">
@@ -25,7 +23,6 @@ const Footer = () => {
             </ul>
           </div>
 
-          {/* Column 3 */}
           <div className="col-md-3 mb-4">
             <h6 className="fw-bold mb-3">Help & Info</h6>
             <ul className="list-unstyled">
@@ -36,7 +33,6 @@ const Footer = () => {
             </ul>
           </div>
 
-          {/* Column 4 */}
           <div className="col-md-3 mb-4">
             <h6 className="fw-bold mb-3">Contact</h6>
             <p className="mb-1">📧 support@fllipy.in</p>
