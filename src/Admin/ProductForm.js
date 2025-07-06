@@ -48,7 +48,7 @@ export default function ProductForm() {
       const imgData = new FormData();
       imgData.append("image", form.imageFile);
       const imgRes = await axios.post("https://fllipy.onrender.com/api/upload", imgData);
-    imagePath = `https://fllipy.vercel.app/${imgRes.data.path}`;
+    imagePath = `https://fllipy.vercel.app${imgRes.data.path}`;
     }
 
     const productData = {
