@@ -21,7 +21,7 @@ const [CheckLogin, setLogin] = useState("");
       alert("User Already Added.😓");
     } else {
       setSignupData([...SignupData, NewSignup]);
-      await axios.post("http://localhost:5000/api/adminlogin", {
+      await axios.post("https://fllipy.onrender.com/api/adminlogin", {
         users: NewSignup,
       });
       alert("Account Sign Up Successfully!🎉");
@@ -59,7 +59,7 @@ useEffect(() => {
       useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/api/adminlogin");
+        const response = await axios.get("https://fllipy.onrender.com/api/adminlogin");
         const usersdata= response.data;
         const data = usersdata.flatMap((doc) => doc.users);
         setSignupData(data);
