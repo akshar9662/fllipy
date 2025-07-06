@@ -7,7 +7,7 @@ import heart from './images/heart.png';
 import shopping from './images/shopping-bag.png';
 import 'bootstrap/dist/css/bootstrap.min.css';
 const navLinks = [
-  { label: 'ALL PRODUCTS ▾', path: '/' },
+  { label: 'ALL PRODUCTS ▾', path: '/products' },
   { label: 'OFFERS', path: '/offers' },
   { label: 'SALE', path: '/sale' },
   { label: 'GIFT CARD', path: '/gift-card' },
