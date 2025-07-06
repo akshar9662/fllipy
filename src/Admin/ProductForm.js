@@ -59,8 +59,6 @@ export default function ProductForm() {
       imgData.append("image", form.imageFile);
 
       const imgRes = await axios.post(`${SERVER_URL}/api/upload`, imgData);
-
-      // ✅ Use correct key here
       imagePath = imgRes.data.image;
     }
 
