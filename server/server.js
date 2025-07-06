@@ -12,6 +12,7 @@ mongoose
   .then(() => console.log("✅ Connected to MongoDB Atlas"))
   .catch((err) => console.error("❌ MongoDB connection failed:", err));
 
+  
 
 const AdminLoginSchema = new mongoose.Schema({
  users: [
@@ -292,6 +293,16 @@ app.delete("/api/cart/clear", async (req, res) => {
     res.status(500).json({ message: "Server error while Clearing cart" });
   }
 });
+// 🔁 Clean all empty carts
+app.delete("/api/cart/autoclean", async (req, res) => {
+  try {
+    const result = await Cart.deleteMany({ items: { $size: 0 } });
+    res.json({ message: "Empty carts deleted", deletedCount: result.deletedCount });
+  } catch (err) {
+    console.error("Error deleting empty carts:", err);
+    res.status(500).json({ error: "Failed to delete empty carts" });
+  }
+});
 
 
 
@@ -523,6 +534,16 @@ app.patch("/api/wishlist/delete", async (req, res) => {
     res
       .status(500)
       .json({ message: "Server error while deleting wishlist item" });
+  }
+});
+// 🔁 Clean all empty carts
+app.delete("/api/wishlist/autoclean", async (req, res) => {
+  try {
+    const result = await Wishlist.deleteMany({ items: { $size: 0 } });
+    res.json({ message: "Empty Wishlist deleted", deletedCount: result.deletedCount });
+  } catch (err) {
+    console.error("Error deleting empty wishlist:", err);
+    res.status(500).json({ error: "Failed to delete empty wishlist" });
   }
 });
 
