@@ -120,6 +120,26 @@ app.get("/api/products/:id", async (req, res) => {
     res.status(500).json({ error: "Server Error" });
   }
 });
+const multer = require('multer');
+const path = require('path');
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'public/images');
+  },
+  filename: function (req, file, cb) {
+    cb(null, file.originalname);  // Or use Date.now() + path.extname
+  },
+});
+
+const upload = multer({ storage });
+
+app.use('/images', express.static('public/images'));
+
+app.post('/api/upload', upload.single('image'), (req, res) => {
+  const imageUrl = `https://fllipy.onrender.com/images/${req.file.filename}`;
+  res.json({ image: imageUrl });
+});
 
 app.post("/api/products", async (req, res) => {
   try {
