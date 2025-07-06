@@ -7,11 +7,11 @@ export default function ProductList({SignupData,CheckLogin}) {
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
-    axios.get("http://localhost:5000/api/products").then((res) => setProducts(res.data));
+    axios.get("https://fllipy.onrender.com/api/products").then((res) => setProducts(res.data));
   }, []);
 
   const deleteProduct = async (id) => {
-    await axios.delete(`http://localhost:5000/api/products/${id}`);
+    await axios.delete(`https://fllipy.onrender.com/api/products/${id}`);
     setProducts(products.filter((p) => p._id !== id));
   };
  const handleLogin = () => {
