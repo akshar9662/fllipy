@@ -58,7 +58,7 @@ export default function ProductForm() {
         const imgData = new FormData();
         imgData.append("image", form.imageFile);
       const imgRes = await axios.post(`${SERVER_URL}/api/upload`, imgData);
-      imagePath = `${SERVER_URL}${imgRes.data.path}`;
+      imagePath = `${SERVER_URL}/${imgRes.data.path}`;
       }
 
       const productData = {
