@@ -9,7 +9,7 @@ export default function ProductForm() {
 
   useEffect(() => {
     if (id) {
-      axios.get(`https://fllipy.onrender.com/api/products/${id}`).then((res) =>
+      axios.get(`http://localhost:5000/api/products/${id}`).then((res) =>
         setForm({
           pname: res.data.pname || "",
           price: res.data.price || "",
@@ -47,8 +47,8 @@ export default function ProductForm() {
     if (form.imageFile) {
       const imgData = new FormData();
       imgData.append("image", form.imageFile);
-      const imgRes = await axios.post("https://fllipy.onrender.com/api/upload", imgData);
-    imagePath = `https://fllipy.vercel.app${imgRes.data.path}`;
+      const imgRes = await axios.post("http://localhost:5000/api/upload", imgData);
+      imagePath = `http://localhost:3000${imgRes.data.path}`;
     }
 
     const productData = {
@@ -59,9 +59,9 @@ export default function ProductForm() {
     };
 
     if (id) {
-      await axios.put(`https://fllipy.onrender.com/api/products/${id}`, productData);
+      await axios.put(`http://localhost:5000/api/products/${id}`, productData);
     } else {
-      await axios.post("https://fllipy.onrender.com/api/products", productData);
+      await axios.post("http://localhost:5000/api/products", productData);
     }
 
     navigate("/admin/products");
