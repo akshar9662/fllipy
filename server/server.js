@@ -120,23 +120,7 @@ app.get("/api/products/:id", async (req, res) => {
     res.status(500).json({ error: "Server Error" });
   }
 });
-const multer = require("multer");
-const path = require("path");
-const imagePath = path.join(__dirname, "../public/images");
-app.use("/images", express.static(imagePath));
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, imagePath);
-  },
-  filename: function (req, file, cb) {
-    cb(null, file.originalname); 
-  },
-});
-const upload = multer({ storage });
-app.post("/api/upload", upload.single("image"), (req, res) => {
-  if (!req.file) return res.status(400).send("No file uploaded.");
-  res.json({ path: `/images/${req.file.originalname}` });
-});
+
 app.post("/api/products", async (req, res) => {
   try {
     const { pname, price, oldPrice, image } = req.body;
