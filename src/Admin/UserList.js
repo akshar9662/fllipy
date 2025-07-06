@@ -7,8 +7,8 @@ export default function UserList({SignupData,CheckLogin}) {
    const [Address, setAddress] = useState([]);
   const navigate = useNavigate();
     useEffect(() => {
-    axios.get("http://localhost:5000/api/login").then((res) => setUsers(res.data));
-    axios.get("http://localhost:5000/api/address").then((res) => {
+    axios.get("https://fllipy.onrender.com/api/login").then((res) => setUsers(res.data));
+    axios.get("https://fllipy.onrender.com/api/address").then((res) => {
       const allUsers = res.data.flatMap((doc) => doc.addresses);
       setAddress(allUsers);
     });
