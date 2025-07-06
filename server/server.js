@@ -121,46 +121,57 @@ app.get("/api/products/:id", async (req, res) => {
 });
 const multer = require("multer");
 const path = require("path");
-app.use("/images", express.static(path.join(__dirname, "../public/images")));const storage = multer.diskStorage({
+const imagePath = path.join(__dirname, "../public/images");
+app.use("/images", express.static(imagePath));
+const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, "../public/images");
+    cb(null, imagePath);
   },
   filename: function (req, file, cb) {
     cb(null, file.originalname); 
   },
 });
 const upload = multer({ storage });
-
 app.post("/api/upload", upload.single("image"), (req, res) => {
   if (!req.file) return res.status(400).send("No file uploaded.");
   res.json({ path: `/images/${req.file.originalname}` });
 });
 app.post("/api/products", async (req, res) => {
   try {
-    const newProduct = new Product(req.body);
+    const { pname, price, oldPrice, image } = req.body;
+
+    const newProduct = new Product({ pname, price, oldPrice, image });
     const savedProduct = await newProduct.save();
+
     res.status(201).json(savedProduct);
   } catch (error) {
     console.error("Error saving product:", error);
     res.status(500).json({ error: "Server Error" });
   }
 });
+
+
 app.put("/api/products/:id", async (req, res) => {
   try {
+    const { pname, price, oldPrice, image } = req.body;
+
     const updatedProduct = await Product.findByIdAndUpdate(
       req.params.id,
-      req.body,
+      { pname, price, oldPrice, image },
       { new: true }
     );
+
     if (!updatedProduct) {
       return res.status(404).json({ message: "Product not found" });
     }
+
     res.json(updatedProduct);
   } catch (error) {
     console.error("Error updating product:", error);
     res.status(500).json({ error: "Server Error" });
   }
 });
+
 app.delete("/api/products/:id", async (req, res) => {
   try {
     const deleted = await Product.findByIdAndDelete(req.params.id);
