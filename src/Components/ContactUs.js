@@ -11,7 +11,7 @@ const [contacts, setContacts] = useState([]);
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/api/contactus");
+        const response = await axios.get("https://fllipy.onrender.com/api/contactus");
         const dbOrders = response.data;
         setContacts(dbOrders);
       } catch (err) {
@@ -66,7 +66,7 @@ const [contacts, setContacts] = useState([]);
       alert("Name should only contain alphabetical characters.");
       return;
     }
-      await axios.post("http://localhost:5000/api/contactus",form);
+      await axios.post("https://fllipy.onrender.com/api/contactus",form);
       setSubmitted(true);
       setForm({ name: "", email: "", message: "" });
        setTimeout(() => {
