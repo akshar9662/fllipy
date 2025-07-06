@@ -49,37 +49,40 @@ export default function ProductForm() {
     }
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    let imagePath = form.image;
+ const handleSubmit = async (e) => {
+  e.preventDefault();
+  let imagePath = form.image;
 
-    try {
-      if (form.imageFile) {
-        const imgData = new FormData();
-        imgData.append("image", form.imageFile);
+  try {
+    if (form.imageFile) {
+      const imgData = new FormData();
+      imgData.append("image", form.imageFile);
+
       const imgRes = await axios.post(`${SERVER_URL}/api/upload`, imgData);
-      imagePath = `${SERVER_URL}/${imgRes.data.path}`;
-      }
 
-      const productData = {
-        pname: form.pname,
-        price: form.price,
-        oldPrice: form.oldPrice,
-        image: imagePath,
-      };
-
-      if (id) {
-        await axios.put(`${SERVER_URL}/api/products/${id}`, productData);
-      } else {
-        await axios.post(`${SERVER_URL}/api/products`, productData);
-      }
-
-      navigate("/admin/products");
-    } catch (err) {
-      console.error("Product submit failed:", err);
-      alert("Something went wrong.");
+      // ✅ Use correct key here
+      imagePath = imgRes.data.image;
     }
-  };
+
+    const productData = {
+      pname: form.pname,
+      price: form.price,
+      oldPrice: form.oldPrice,
+      image: imagePath,
+    };
+
+    if (id) {
+      await axios.put(`${SERVER_URL}/api/products/${id}`, productData);
+    } else {
+      await axios.post(`${SERVER_URL}/api/products`, productData);
+    }
+
+    navigate("/admin/products");
+  } catch (err) {
+    console.error("Product submit failed:", err);
+    alert("Something went wrong.");
+  }
+};
 
   return (
     <div className="container mt-3">
