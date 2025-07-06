@@ -155,7 +155,7 @@ useEffect(() => {
   useEffect(() => {
   const autoClean = async () => {
     try {
-      const res = await axios.delete("http://localhost:5000/api/cart/autoclean");
+      const res = await axios.delete(`${process.env.REACT_APP_API}/api/cart/autoclean`);
     } catch (err) {
       console.error("Cleanup error:", err);
     }
@@ -166,7 +166,7 @@ useEffect(() => {
 useEffect(() => {
   const autoClean = async () => {
     try {
-      const res = await axios.delete("http://localhost:5000/api/wishlist/autoclean");
+      const res = await axios.delete(`${process.env.REACT_APP_API}/api/wishlist/autoclean`);
     } catch (err) {
       console.error("Cleanup error:", err);
     }
