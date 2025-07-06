@@ -91,7 +91,7 @@ export default function ProductForm() {
 
         <div className="mb-3">
           <label className="form-label">Product Image</label>
-          <input type="file" accept="image/*" onChange={handleImageChange} className="form-control" />
+          <input type="file" accept="image/*" onChange={handleImageChange} className="form-control" required/>
           {form.image && (
             <img
               src={form.image.startsWith("data") ? form.image : form.image}
