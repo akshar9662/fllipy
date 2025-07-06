@@ -125,18 +125,17 @@ const path = require("path");
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, "public/images"); // Save in public/images
+    cb(null, "public/images"); 
   },
   filename: function (req, file, cb) {
-    cb(null, Date.now() + path.extname(file.originalname)); // Unique filename
+    cb(null, Date.now() + path.extname(file.originalname)); 
   },
 });
 
 const upload = multer({ storage });
 
-app.use('/images', express.static('public/images')); // Serve public/images
+app.use('/images', express.static('public/images')); 
 
-// Upload Route
 app.post('/api/upload', upload.single('image'), (req, res) => {
   if (!req.file) {
     return res.status(400).json({ message: "Image not uploaded" });
