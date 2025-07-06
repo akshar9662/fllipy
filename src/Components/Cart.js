@@ -92,8 +92,8 @@ const user = SignupData.find((u) => String(u._id) === String(CheckLogin));
               <div className="card-body">
                 <h4 className="mb-3">Price Details</h4>
                 <div className="d-flex justify-content-between mb-2">
-                  <span>Items ({cartItems.length})</span>
-                  <span>₹{TotalItems}</span>
+                  <span>Items ({cartItems.filter(item => item.loginId === CheckLogin).reduce((sum, item) => sum + item.quantity, 0)})</span>
+                   <span>₹{TotalItems}</span>
                 </div>
                 <div className="d-flex justify-content-between mb-2">
                   <span>Platform Fee</span>
