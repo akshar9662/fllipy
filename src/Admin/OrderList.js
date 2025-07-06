@@ -10,9 +10,9 @@ export default function OrderList({SignupData,CheckLogin}) {
 
 
   useEffect(() => {
-    axios.get("http://localhost:5000/api/order").then((res) => setOrders(res.data));
+    axios.get("https://fllipy.onrender.com/api/order").then((res) => setOrders(res.data));
 
-    axios.get("http://localhost:5000/api/login").then((res) => {
+    axios.get("https://fllipy.onrender.com/api/login").then((res) => {
       const allUsers = res.data.flatMap((doc) => doc.users);
       setUsers(allUsers);
     });
