@@ -152,7 +152,28 @@ useEffect(() => {
     };
     fetchOrders();
   }, []);
-  
+  useEffect(() => {
+  const autoClean = async () => {
+    try {
+      const res = await axios.delete("http://localhost:5000/api/cart/autoclean");
+    } catch (err) {
+      console.error("Cleanup error:", err);
+    }
+  };
+
+  autoClean();
+}, []);
+useEffect(() => {
+  const autoClean = async () => {
+    try {
+      const res = await axios.delete("http://localhost:5000/api/wishlist/autoclean");
+    } catch (err) {
+      console.error("Cleanup error:", err);
+    }
+  };
+
+  autoClean();
+}, []);
 
 
   const AddUser = async (NewSignup) => {
