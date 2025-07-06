@@ -120,27 +120,31 @@ app.get("/api/products/:id", async (req, res) => {
     res.status(500).json({ error: "Server Error" });
   }
 });
-const multer = require('multer');
-const path = require('path');
+const multer = require("multer");
+const path = require("path");
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, 'public/images');
+    cb(null, "public/images"); // Save in public/images
   },
   filename: function (req, file, cb) {
-    cb(null, file.originalname);  // Or use Date.now() + path.extname
+    cb(null, Date.now() + path.extname(file.originalname)); // Unique filename
   },
 });
 
 const upload = multer({ storage });
 
-app.use('/images', express.static('public/images'));
+app.use('/images', express.static('public/images')); // Serve public/images
 
+// Upload Route
 app.post('/api/upload', upload.single('image'), (req, res) => {
+  if (!req.file) {
+    return res.status(400).json({ message: "Image not uploaded" });
+  }
+
   const imageUrl = `https://fllipy.onrender.com/images/${req.file.filename}`;
   res.json({ image: imageUrl });
 });
-
 app.post("/api/products", async (req, res) => {
   try {
     const { pname, price, oldPrice, image } = req.body;
